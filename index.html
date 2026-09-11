@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MAPE PUCP - Tracker de Relevamiento de Procesos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #004691;
+      --primary-light: #0d6efd;
+      --primary-dark: #002e63;
+      --primary-subtle: #e7f0fa;
+      --secondary: #00a3e0;
+      --success: #198754;
+      --success-bg: #d1e7dd;
+      --warning: #f59e0b;
+      --warning-bg: #fef3c7;
+      --danger: #dc3545;
+      --bg-main: #f8fafc;
+      --bg-card: #ffffff;
+      --border-color: #e2e8f0;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -2px rgba(0,0,0,0.04);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Header & Nav */
+    .top-nav {
+      background-color: var(--primary-dark);
+      color: #ffffff;
+      padding: 1rem 2rem;
+      box-shadow: var(--shadow-md);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .badge-pucp {
+      background: linear-gradient(135deg, #0072ce, #003b7a);
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: 1px;
+      padding: 0.4rem 0.8rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .brand h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+      color: #94a3b8;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.55rem 1rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background-color: var(--secondary);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background-color: #0284c7;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background-color: var(--primary-subtle);
+      color: var(--primary);
+      border-color: #cbd5e1;
+    }
+
+    .btn-secondary:hover {
+      background-color: #dbeafe;
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      color: #ffffff;
+      border-color: rgba(255,255,255,0.3);
+    }
+
+    .btn-outline:hover {
+      background-color: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.6);
+    }
+
+    .btn-danger-sm {
+      background-color: #fee2e2;
+      color: #b91c1c;
+      padding: 0.35rem 0.6rem;
+      font-size: 0.75rem;
+      border-radius: 4px;
+    }
+
+    .btn-danger-sm:hover {
+      background-color: #fca5a5;
+    }
+
+    /* Layout */
+    .main-layout {
+      max-width: 1400px;
+      margin: 1.5rem auto;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    @media (max-width: 1024px) {
+      .main-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Sidebar & Cards */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      position: sticky;
+      top: 5.5rem;
+    }
+
+    .card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.85rem;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Progress bar */
+    .progress-bar-bg {
+      width: 100%;
+      height: 10px;
+      background-color: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #0d6efd, #10b981);
+      border-radius: 999px;
+      transition: width 0.4s ease;
+    }
+
+    .progress-stats {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .highlight-number {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .percentage-label {
+      font-weight: 700;
+      color: var(--success);
+      margin-left: 0.35rem;
+    }
+
+    /* Deadlines */
+    .deadline-item {
+      padding: 0.85rem 0;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .deadline-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .deadline-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      display: inline-block;
+      width: fit-content;
+    }
+
+    .deadline-badge.part-1 {
+      background-color: #dbeafe;
+      color: #1e40af;
+    }
+
+    .deadline-badge.part-2 {
+      background-color: #fef3c7;
+      color: #92400e;
+    }
+
+    .deadline-info strong {
+      display: block;
+      font-size: 0.9rem;
+      color: var(--text-main);
+    }
+
+    .deadline-time {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--danger);
+      font-weight: 600;
+    }
+
+    .deadline-desc {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .status-pill {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      width: fit-content;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .status-pill.pending {
+      background-color: #fee2e2;
+      color: #991b1b;
+    }
+
+    .status-pill.complete {
+      background-color: var(--success-bg);
+      color: #065f46;
+    }
+
+    /* Tips list */
+    .tips-list {
+      padding-left: 1.2rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    /* Tabs */
+    .tabs-nav {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      background: #e2e8f0;
+      padding: 0.35rem;
+      border-radius: var(--radius-md);
+      width: fit-content;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 0.6rem 1.1rem;
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .tab-btn.active {
+      background-color: var(--bg-card);
+      color: var(--primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Step cards */
+    .section-group {
+      margin-bottom: 2rem;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .section-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-tag {
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+
+    .part-1-tag {
+      background-color: #1e40af;
+      color: #ffffff;
+    }
+
+    .part-2-tag {
+      background-color: #b45309;
+      color: #ffffff;
+    }
+
+    .section-due {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--danger);
+      background: #fff1f2;
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid #fecdd3;
+    }
+
+    .step-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+    }
+
+    .step-card.completed {
+      border-color: #a7f3d0;
+      background-color: #f0fdf4;
+    }
+
+    .step-card.highlight-step {
+      border: 2px dashed #f59e0b;
+      background-color: #fffbeb;
+    }
+
+    .step-card.highlight-step.completed {
+      border: 2px solid #10b981;
+      background-color: #f0fdf4;
+    }
+
+    .step-checkbox-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      cursor: pointer;
+    }
+
+    .step-checkbox {
+      display: none;
+    }
+
+    .custom-checkbox {
+      width: 24px;
+      height: 24px;
+      border: 2px solid #cbd5e1;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+      transition: all 0.2s ease;
+      background-color: #ffffff;
+    }
+
+    .step-checkbox:checked + .custom-checkbox {
+      background-color: #10b981;
+      border-color: #10b981;
+    }
+
+    .step-checkbox:checked + .custom-checkbox::after {
+      content: '✓';
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 1rem;
+    }
+
+    .step-header-text {
+      flex-grow: 1;
+    }
+
+    .step-number {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--primary);
+      letter-spacing: 0.5px;
+    }
+
+    .step-header-text h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-top: 0.1rem;
+    }
+
+    .step-body {
+      margin-top: 0.85rem;
+      padding-left: 2.5rem;
+    }
+
+    @media (max-width: 640px) {
+      .step-body {
+        padding-left: 0;
+      }
+    }
+
+    .step-instruction {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+
+    /* Forms & inputs */
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .form-col {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 640px) {
+      .form-grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 0.6rem 0.85rem;
+      border: 1px solid #cbd5e1;
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+      font-family: inherit;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      background-color: #ffffff;
+    }
+
+    .input-field:focus {
+      outline: none;
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+    }
+
+    .textarea-field {
+      resize: vertical;
+    }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 0.3rem;
+    }
+
+    /* Selfie upload */
+    .file-input-hidden {
+      display: none;
+    }
+
+    .selfie-upload-box {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      align-items: flex-start;
+    }
+
+    .selfie-preview-wrapper {
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      border: 1px solid #e2e8f0;
+      border-radius: var(--radius-sm);
+      background-color: #ffffff;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .selfie-preview-wrapper img {
+      max-width: 280px;
+      max-height: 200px;
+      border-radius: 6px;
+      object-fit: cover;
+    }
+
+    .selfie-label {
+      font-size: 0.75rem;
+      color: var(--success);
+      font-weight: 600;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Live Interview Tab */
+    .card-header-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .form-section {
+      padding: 1.25rem 0;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .form-section-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.85rem;
+    }
+
+    .section-desc {
+      font-size: 0.825rem;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .activities-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .activity-row {
+      display: grid;
+      grid-template-columns: 40px 140px 1fr 1fr 40px;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    @media (max-width: 768px) {
+      .activity-row {
+        grid-template-columns: 1fr;
+        border: 1px dashed #cbd5e1;
+        padding: 0.75rem;
+        border-radius: 8px;
+      }
+    }
+
+    .activity-index {
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--primary);
+      text-align: center;
+    }
+
+    /* Summary view */
+    .summary-preview-box {
+      background-color: #0f172a;
+      border-radius: var(--radius-sm);
+      padding: 1.25rem;
+      overflow-x: auto;
+    }
+
+    .summary-pre {
+      color: #38bdf8;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--border-color);
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header principal -->
+  <header class="top-nav">
+    <div class="nav-container">
+      <div class="brand">
+        <div class="badge-pucp">PUCP</div>
+        <div>
+          <h1>MAPE 2026-2 &bull; Laboratorio 01</h1>
+          <p class="subtitle">Relevamiento y Documentación de Procesos Empresariales &bull; Prof. Marco Caldas</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="btnExportJson" class="btn btn-outline" title="Descargar datos guardados en formato JSON">
+          <span>💾</span> Exportar JSON
+        </button>
+        <button id="btnExportSummary" class="btn btn-primary" title="Generar texto listo para diapositivas de PowerPoint">
+          <span>📄</span> Generar Resumen PPT
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-layout">
+    <!-- Panel lateral de métricas y plazos -->
+    <aside class="sidebar">
+      <div class="card progress-card">
+        <h3>Progreso General</h3>
+        <div class="progress-circle-container">
+          <div class="progress-bar-bg">
+            <div id="overallProgressBar" class="progress-bar-fill" style="width: 0%"></div>
+          </div>
+          <div class="progress-stats">
+            <span id="completedStepsCount" class="highlight-number">0</span> de 10 pasos completados
+            <span id="overallPercentage" class="percentage-label">(0%)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Deadlines -->
+      <div class="card deadlines-card">
+        <h3>Plazos de Entrega</h3>
+        
+        <div class="deadline-item">
+          <div class="deadline-badge part-1">Parte 1</div>
+          <div class="deadline-info">
+            <strong>Viernes 11 de Septiembre</strong>
+            <span class="deadline-time">Hora límite: 3:00 PM</span>
+            <span class="deadline-desc">Entrevista en campus + Selfie obligatorio</span>
+          </div>
+          <div id="badgeStatusPart1" class="status-pill pending">Pendiente</div>
+        </div>
+
+        <div class="deadline-item">
+          <div class="deadline-badge part-2">Parte 2</div>
+          <div class="deadline-info">
+            <strong>Domingo 13 de Septiembre</strong>
+            <span class="deadline-time">Hora límite: 11:59 PM</span>
+            <span class="deadline-desc">Flujograma Camunda + Mejoras + PPT</span>
+          </div>
+          <div id="badgeStatusPart2" class="status-pill pending">Pendiente</div>
+        </div>
+      </div>
+
+      <!-- Quick Tips -->
+      <div class="card tips-card">
+        <h3>💡 Tips para el Campus</h3>
+        <ul class="tips-list">
+          <li><strong>Presentación cordial:</strong> Mencionen que son alumnos de MAPE PUCP realizando un ejercicio académico.</li>
+          <li><strong>Selfie obligatorio:</strong> Requisito excluyente de la Parte 1; tómense la foto grupal con el involucrado.</li>
+          <li><strong>Detectar excepciones:</strong> Pregunten "¿qué pasa cuando algo falla o falta un requisito?", esto genera las compuertas exclusivas en Camunda.</li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Contenido principal con pestañas -->
+    <section class="content-area">
+      <!-- Navegación de pestañas -->
+      <nav class="tabs-nav">
+        <button class="tab-btn active" data-tab="tab-pasos">
+          <span class="tab-icon">✅</span> Pasos del Flujo
+        </button>
+        <button class="tab-btn" data-tab="tab-relevamiento">
+          <span class="tab-icon">📝</span> Ficha de Entrevista en Vivo
+        </button>
+        <button class="tab-btn" data-tab="tab-resumen">
+          <span class="tab-icon">📊</span> Vista Resumen para PPT
+        </button>
+      </nav>
+
+      <!-- TAB 1: SEGUIMIENTO DE PASOS -->
+      <div id="tab-pasos" class="tab-content active">
+        <!-- SECCIÓN PARTE 1 -->
+        <div class="section-group">
+          <div class="section-header">
+            <div class="section-title-wrap">
+              <span class="section-tag part-1-tag">Parte 1</span>
+              <h2>Relevamiento en Campus y Entrevista</h2>
+            </div>
+            <span class="section-due">Entrega: Vie 11 Sep, 3:00 PM</span>
+          </div>
+
+          <div class="step-card" id="step1-card">
+            <label class="step-checkbox-label">
+              <input type="checkbox" id="step1-check" class="step-checkbox" data-step="1">
+              <span class="custom-checkbox"></span>
+              <div class="step-header-text">
+                <span class="step-number">Paso 1</span>
+                <h3>Identificar el cargo de la persona entrevistada y su área</h3>
+              </div>
+            </label>
+            <div class="step-body">
+              <p class="step-instruction">Registra el nombre de la persona, su cargo formal y el área/oficina del campus a la que pertenece.</p>
+              <div class="form-row">
+                <input type="text" id="inputEntrevistadoNombre" class="input-field" placeholder="Nombre completo del entrevistado...">
+                <input type="text" id="inputEntrevistadoCargo" class="input-field" placeholder="Cargo o puesto oficial...">
+                <input type="text" id="inputEntrevistadoArea" class="input-field" placeholder="Área / Unidad PUCP...">
+              </div>
+            </div>
+          </div>
+
+          <div class="step-card" id="step2-card">
+            <label class="step-checkbox-label">
+              <input type="checkbox" id="step2-check" class="step-checkbox" data-step="2">
+              <span class="custom-checkbox"></span>
+              <div class="step-header-text">
+                <span class="step-number">Paso 2</span>
+                <h3>Identificar nombre del proceso, su alcance y objetivo</h3>
+              </div>
+            </label>
+            <div class="step-body">
+              <p class="step-instruction">Delimita qué hace el proceso, para qué existe y dónde empieza y termina.</p>
+              <div class="form-col">
+                <input type="text" id="inputProcesoNombre" class="input-field" placeholder="Nombre formal del proceso (ej. Préstamo de material bibliográfico)...">
+                <textarea id="inputProcesoObjetivo" class="input-field textarea-field" rows="2" placeholder="Objetivo: ¿Cuál es el propósito o meta que cumple este proceso?..."></textarea>
+                <div class="form-row">
+                  <input type="text" id="inputProcesoInicio" class="input-field" placeholder="Inicio de alcance: Evento o disparador inicial...">
+                  <input type="text" id="inputProcesoFin" class="input-field" placeholder="Fin de alcance: Resultado o entrega final...">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-card" id="step3-card">
+            <label class="step-checkbox-label">
+              <input type="checkbox" id="step3-check" class="step-checkbox" data-step="3">
+              <span class="custom-checkbox"></span>
+              <div class="step-header-text">
+                <span class="step-number">Paso 3</span>
+                <h3>Determinar los participantes del proceso (Roles y Lanes)</h3>
+              </div>
+            </label>
+            <div class="step-body">
+              <p class="step-instruction">Enumera los roles que intervienen (estudiante, docente, asistente, etc.). Servirán para los Lanes en Camunda.</p>
+              <textarea id="inputParticipantes" class="input-field textarea-field" rows="2" placeholder="Participantes (uno por línea o separados por comas): Ej. Alumno solicitante, Auxiliar de biblioteca, Jefe de área..."></textarea>
+            </div>
+          </div>
+
+          <div class="step-card" id="step4-card">
+            <label class="step-checkbox-label">
+              <input type="checkbox" id="step4-check" class="step-checkbox" data-step="4">
+              <span class="custom-checkbox"></span>
+              <div class="step-header-text">
+                <span class="step-number">Paso 4</span>
+                <h3>Identificar las Entradas (disparadores) y Salidas (productos)</h3>
+              </div>
+            </label>
+            <div class="step-body">
+              <p class="step-instruction">¿Qué información o insumos detonan el proceso y qué producto o servicio se entrega al final?</p>
+              <div class="form-row">
+                <textarea id="inputEntradas" class="input-field textarea-field" rows="2" placeholder="Entradas: Solicitud del usuario, carné universitario, datos en formulario..."></textarea>
+                <textarea id="inputSalidas" class="input-field textarea-field" rows="2" placeholder="Salidas: Constancia emitida, libro entregado, ticket generado, reporte..."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-card" id="step5-card">
+            <label class="step-checkbox-label">
+              <input type="checkbox" id="step5-check" class="step-checkbox" data-step="5">
+              <span class="custom-checkbox"></span>
+              <div class="step-header-text">
+                <span class="step-number">Paso 5</span>
+                <h3>Inventariar los formatos y documentos utilizados</h3>
+              </div>
+            </label>
+            <div class="step-body">
+              <p class="step-instruction">Formatos físicos o digitales (formularios en papel, plantillas Excel, comprobantes, PDFs).</p>
+              <textarea id="inputFormatos" class="input-field textarea-field" rows="2" placeholder="Formatos y documentos: Formato F-01 de préstamo, Hoja de registro físico, Correo de confirmación..."></textarea>
+            </div>
+          </div>
+
+          <div class="step-card" id="step6-card">
+            <label class="step-checkbox-label">
+              <input type="checkbox" id="step6-check" class="step-checkbox" data-step="6">
+              <span class="custom-checkbox"></span>
+              <div class="step-header-text">
+                <span class="step-number">Paso 6</span>
+                <h3>Inventariar los sistemas de información con los que interactúan</h3>
+              </div>
+            </label>
+            <div class="step-body">
+              <p class="step-instruction">Sistemas informáticos, plataformas web o software (Campus Virtual, SAP, Google Drive, etc.).</p>
+              <textarea id="inputSistemas" class="input-field textarea-field" rows="2" placeholder="Sistemas de información: Campus Virtual PUCP, Sistema Primo, Google Workspace, etc..."></textarea>
+            </div>
+          </div>
+
+          <div class="step-card highlight-step" id="step7-card">
+            <label class="step-checkbox-label">
+              <input type="checkbox" id="step7-check" class="step-checkbox" data-step="7">
+              <span class="custom-checkbox"></span>
+              <div class="step-header-text">
+                <span class="step-number">Paso 7 (OBLIGATORIO)</span>
+                <h3>Tomarse foto con el involucrado (Selfie Obligatorio)</h3>
+              </div>
+            </label>
+            <div class="step-body">
+              <p class="step-instruction"><strong>¡Requisito indispensable!</strong> Foto grupal junto al entrevistado en su área de trabajo.</p>
+              <div class="selfie-upload-box">
+                <input type="file" id="inputSelfieFile" accept="image/*" class="file-input-hidden">
+                <label for="inputSelfieFile" class="btn btn-secondary">
+                  <span>📸</span> Cargar foto / selfie de verificación
+                </label>
+                <div id="selfiePreviewContainer" class="selfie-preview-wrapper hidden">
+                  <img id="selfiePreviewImg" src="" alt="Selfie obligatorio">
+                  <span id="selfieFilename" class="selfie-label"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECCIÓN PARTE 2 -->
+        <div class="section-group">
+          <div class="section-header">
+            <div class="section-title-wrap">
+              <span class="section-tag part-2-tag">Parte 2</span>
+              <h2>Documentación, Mejora y Presentación</h2>
+            </div>
+            <span class="section-due">Entrega: Dom 13 Sep, 11:59 PM</span>
+          </div>
+
+          <div class="step-card" id="step8-card">
+            <label class="step-checkbox-label">
+              <input type="checkbox" id="step8-check" class="step-checkbox" data-step="8">
+              <span class="custom-checkbox"></span>
+              <div class="step-header-text">
+                <span class="step-number">Paso 8</span>
+                <h3>Documentar el proceso utilizando un flujograma BPMN 2.0 en Camunda</h3>
+              </div>
+            </label>
+            <div class="step-body">
+              <p class="step-instruction">Modelar el proceso en <strong>Camunda Modeler</strong> usando compuertas, eventos de inicio/fin, pools, lanes y objetos de datos.</p>
+              <div class="form-col">
+                <input type="text" id="inputCamundaStatus" class="input-field" placeholder="Notas sobre el modelo (ej. Diagrama exportado a .png y guardado como .bpmn)...">
+              </div>
+            </div>
+          </div>
+
+          <div class="step-card" id="step9-card">
+            <label class="step-checkbox-label">
+              <input type="checkbox" id="step9-check" class="step-checkbox" data-step="9">
+              <span class="custom-checkbox"></span>
+              <div class="step-header-text">
+                <span class="step-number">Paso 9</span>
+                <h3>Inventario de Oportunidades de Mejora (describir cada una)</h3>
+              </div>
+            </label>
+            <div class="step-body">
+              <p class="step-instruction">Detalla los cuellos de botella, pasos manuales redundantes o fallas detectadas, y su propuesta de solución.</p>
+              <textarea id="inputMejoras" class="input-field textarea-field" rows="3" placeholder="1. Oportunidad 1: ...&#10;2. Oportunidad 2: ...&#10;3. Oportunidad 3: ..."></textarea>
+            </div>
+          </div>
+
+          <div class="step-card" id="step10-card">
+            <label class="step-checkbox-label">
+              <input type="checkbox" id="step10-check" class="step-checkbox" data-step="10">
+              <span class="custom-checkbox"></span>
+              <div class="step-header-text">
+                <span class="step-number">Paso 10</span>
+                <h3>Elaborar la presentación en PowerPoint con el resumen</h3>
+              </div>
+            </label>
+            <div class="step-body">
+              <p class="step-instruction">Montar las láminas en PowerPoint usando la estructura de 12 diapositivas definida en el proyecto.</p>
+              <div class="form-col">
+                <input type="text" id="inputPptStatus" class="input-field" placeholder="Estado del PPT (ej. Diapositivas 1 a 12 completadas y revisadas)...">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: FICHA DE ENTREVISTA EN VIVO -->
+      <div id="tab-relevamiento" class="tab-content">
+        <div class="card">
+          <div class="card-header-flex">
+            <div>
+              <h2>Ficha de Relevamiento de Procesos</h2>
+              <p class="subtitle">Utiliza este formulario durante la entrevista en vivo para no olvidar ninguna pregunta clave.</p>
+            </div>
+            <button id="btnSyncToSteps" class="btn btn-outline" style="background-color: var(--primary); color:#fff;">🔄 Sincronizar con Pasos</button>
+          </div>
+
+          <div class="form-section">
+            <h4 class="form-section-title">1. Datos Generales de la Entrevista</h4>
+            <div class="form-grid-2">
+              <div>
+                <label>Nombre del Entrevistado</label>
+                <input type="text" id="liveNombre" class="input-field">
+              </div>
+              <div>
+                <label>Cargo Oficial</label>
+                <input type="text" id="liveCargo" class="input-field">
+              </div>
+              <div>
+                <label>Área / Oficina en Campus PUCP</label>
+                <input type="text" id="liveArea" class="input-field">
+              </div>
+              <div>
+                <label>Integrantes del Grupo Presentes</label>
+                <input type="text" id="liveIntegrantes" class="input-field" placeholder="Nombres de los alumnos...">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h4 class="form-section-title">2. Características del Proceso</h4>
+            <div class="form-col">
+              <div>
+                <label>Nombre del Proceso</label>
+                <input type="text" id="liveProceso" class="input-field">
+              </div>
+              <div>
+                <label>Objetivo</label>
+                <textarea id="liveObjetivo" class="input-field textarea-field" rows="2"></textarea>
+              </div>
+              <div class="form-grid-2">
+                <div>
+                  <label>Disparador / Inicio de Alcance</label>
+                  <input type="text" id="liveInicio" class="input-field">
+                </div>
+                <div>
+                  <label>Resultado / Fin de Alcance</label>
+                  <input type="text" id="liveFin" class="input-field">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h4 class="form-section-title">3. Levantamiento de Actividades Secuenciales (Paso a Paso)</h4>
+            <p class="section-desc">Anota la secuencia de acciones para diseñar luego el diagrama Camunda:</p>
+            <div id="activitiesListContainer" class="activities-container">
+              <!-- Actividades agregadas dinámicamente -->
+            </div>
+            <button id="btnAddActivity" class="btn btn-secondary" style="margin-top: 10px;">
+              <span>➕</span> Agregar Actividad al Flujo
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: RESUMEN PARA POWERPOINT -->
+      <div id="tab-resumen" class="tab-content">
+        <div class="card">
+          <div class="card-header-flex">
+            <div>
+              <h2>Resumen Estructurado para Diapositivas PPT</h2>
+              <p class="subtitle">Texto compilado a partir de toda la información que registres, formateado para copiar directamente al PowerPoint.</p>
+            </div>
+            <button id="btnCopySummary" class="btn btn-primary">📋 Copiar al Portapapeles</button>
+          </div>
+          <div class="summary-preview-box">
+            <pre id="summaryTextOutput" class="summary-pre">Completa la información en los pasos o en la ficha de entrevista para ver aquí el resumen listo para diapositivas...</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>MAPE 2026-2 &bull; Pontificia Universidad Católica del Perú &bull; Herramienta de Seguimiento de Laboratorio 01</p>
+  </footer>
+
+  <script>
+    // Clave de almacenamiento local
+    const STORAGE_KEY = "MAPE_LAB01_TRACKER_DATA";
+
+    // Estado inicial por defecto
+    let appState = {
+      steps: {
+        1: false, 2: false, 3: false, 4: false, 5: false,
+        6: false, 7: false, 8: false, 9: false, 10: false
+      },
+      formData: {
+        entrevistadoNombre: "",
+        entrevistadoCargo: "",
+        entrevistadoArea: "",
+        procesoNombre: "",
+        procesoObjetivo: "",
+        procesoInicio: "",
+        procesoFin: "",
+        participantes: "",
+        entradas: "",
+        salidas: "",
+        formatos: "",
+        sistemas: "",
+        selfieDataUrl: "",
+        selfieFilename: "",
+        camundaStatus: "",
+        mejoras: "",
+        pptStatus: "",
+        liveIntegrantes: "",
+        activities: [
+          { id: 1, rol: "Usuario / Alumno", accion: "Presenta solicitud o requerimiento", condicion: "Requisitos válidos" },
+          { id: 2, rol: "Encargado de área", accion: "Verifica información en el sistema", condicion: "Sistema disponible" }
+        ]
+      }
+    };
+
+    // Cargar datos persistidos
+    function loadState() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          appState = {
+            ...appState,
+            ...parsed,
+            steps: { ...appState.steps, ...parsed.steps },
+            formData: { ...appState.formData, ...parsed.formData }
+          };
+        }
+      } catch (e) {
+        console.error("Error al cargar localStorage:", e);
+      }
+    }
+
+    // Guardar datos
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+      } catch (e) {
+        console.warn("No se pudo guardar en localStorage (posible límite de tamaño):", e);
+      }
+    }
+
+    // Inicialización de DOM y Eventos
+    document.addEventListener("DOMContentLoaded", () => {
+      loadState();
+      initTabs();
+      bindStepCheckboxes();
+      bindFormInputs();
+      bindSelfieUpload();
+      bindActivities();
+      bindExportButtons();
+      populateUIFromState();
+      updateProgress();
+      generateSummaryText();
+    });
+
+    // Pestañas
+    function initTabs() {
+      const tabBtns = document.querySelectorAll(".tab-btn");
+      const tabContents = document.querySelectorAll(".tab-content");
+
+      tabBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+          const targetId = btn.dataset.tab;
+          tabBtns.forEach(b => b.classList.remove("active"));
+          tabContents.forEach(c => c.classList.remove("active"));
+
+          btn.classList.add("active");
+          const targetContent = document.getElementById(targetId);
+          if (targetContent) {
+            targetContent.classList.add("active");
+          }
+
+          if (targetId === "tab-resumen") {
+            generateSummaryText();
+          }
+        });
+      });
+    }
+
+    // Checkboxes de pasos
+    function bindStepCheckboxes() {
+      for (let i = 1; i <= 10; i++) {
+        const chk = document.getElementById(`step${i}-check`);
+        const card = document.getElementById(`step${i}-card`);
+        if (!chk) continue;
+
+        chk.addEventListener("change", () => {
+          appState.steps[i] = chk.checked;
+          if (card) {
+            if (chk.checked) card.classList.add("completed");
+            else card.classList.remove("completed");
+          }
+          saveState();
+          updateProgress();
+        });
+      }
+    }
+
+    // Mapeo de campos
+    const inputMap = [
+      { id: "inputEntrevistadoNombre", prop: "entrevistadoNombre" },
+      { id: "inputEntrevistadoCargo", prop: "entrevistadoCargo" },
+      { id: "inputEntrevistadoArea", prop: "entrevistadoArea" },
+      { id: "inputProcesoNombre", prop: "procesoNombre" },
+      { id: "inputProcesoObjetivo", prop: "procesoObjetivo" },
+      { id: "inputProcesoInicio", prop: "procesoInicio" },
+      { id: "inputProcesoFin", prop: "procesoFin" },
+      { id: "inputParticipantes", prop: "participantes" },
+      { id: "inputEntradas", prop: "entradas" },
+      { id: "inputSalidas", prop: "salidas" },
+      { id: "inputFormatos", prop: "formatos" },
+      { id: "inputSistemas", prop: "sistemas" },
+      { id: "inputCamundaStatus", prop: "camundaStatus" },
+      { id: "inputMejoras", prop: "mejoras" },
+      { id: "inputPptStatus", prop: "pptStatus" },
+
+      // Live Tab mirror
+      { id: "liveNombre", prop: "entrevistadoNombre" },
+      { id: "liveCargo", prop: "entrevistadoCargo" },
+      { id: "liveArea", prop: "entrevistadoArea" },
+      { id: "liveProceso", prop: "procesoNombre" },
+      { id: "liveObjetivo", prop: "procesoObjetivo" },
+      { id: "liveInicio", prop: "procesoInicio" },
+      { id: "liveFin", prop: "procesoFin" },
+      { id: "liveIntegrantes", prop: "liveIntegrantes" }
+    ];
+
+    function bindFormInputs() {
+      inputMap.forEach(item => {
+        const el = document.getElementById(item.id);
+        if (!el) return;
+
+        el.addEventListener("input", () => {
+          appState.formData[item.prop] = el.value;
+
+          // Sincronizar inputs espejos
+          inputMap.filter(m => m.prop === item.prop && m.id !== item.id).forEach(mirror => {
+            const mirrorEl = document.getElementById(mirror.id);
+            if (mirrorEl) mirrorEl.value = el.value;
+          });
+
+          saveState();
+        });
+      });
+
+      const btnSync = document.getElementById("btnSyncToSteps");
+      if (btnSync) {
+        btnSync.addEventListener("click", () => {
+          populateUIFromState();
+          alert("✅ Datos sincronizados correctamente.");
+        });
+      }
+    }
+
+    // Carga de imagen para el selfie obligatorio
+    function bindSelfieUpload() {
+      const fileInput = document.getElementById("inputSelfieFile");
+      const previewImg = document.getElementById("selfiePreviewImg");
+      const previewContainer = document.getElementById("selfiePreviewContainer");
+      const filenameLabel = document.getElementById("selfieFilename");
+
+      if (!fileInput) return;
+
+      fileInput.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const dataUrl = event.target.result;
+          previewImg.src = dataUrl;
+          previewContainer.classList.remove("hidden");
+          filenameLabel.textContent = `✓ Foto cargada: ${file.name}`;
+
+          appState.formData.selfieDataUrl = dataUrl;
+          appState.formData.selfieFilename = file.name;
+
+          // Auto check paso 7
+          const chk7 = document.getElementById("step7-check");
+          if (chk7 && !chk7.checked) {
+            chk7.checked = true;
+            appState.steps[7] = true;
+            document.getElementById("step7-card")?.classList.add("completed");
+            updateProgress();
+          }
+
+          saveState();
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // Gestión de actividades dinámicas (Paso a paso)
+    function bindActivities() {
+      const btnAdd = document.getElementById("btnAddActivity");
+      if (!btnAdd) return;
+
+      btnAdd.addEventListener("click", () => {
+        const newId = appState.formData.activities.length + 1;
+        appState.formData.activities.push({
+          id: newId,
+          rol: "",
+          accion: "",
+          condicion: ""
+        });
+        renderActivities();
+        saveState();
+      });
+    }
+
+    function renderActivities() {
+      const container = document.getElementById("activitiesListContainer");
+      if (!container) return;
+
+      container.innerHTML = "";
+      if (!appState.formData.activities || appState.formData.activities.length === 0) {
+        container.innerHTML = "<p style='color:#64748b; font-size:0.85rem;'>No hay actividades añadidas aún. Haz clic en 'Agregar Actividad'.</p>";
+        return;
+      }
+
+      appState.formData.activities.forEach((act, idx) => {
+        const row = document.createElement("div");
+        row.className = "activity-row";
+        row.innerHTML = `
+          <div class="activity-index">#${idx + 1}</div>
+          <input type="text" class="input-field act-rol" placeholder="Rol / Responsable" value="${escapeHtml(act.rol || '')}">
+          <input type="text" class="input-field act-accion" placeholder="Acción realizada" value="${escapeHtml(act.accion || '')}">
+          <input type="text" class="input-field act-condicion" placeholder="Decisión / Condición" value="${escapeHtml(act.condicion || '')}">
+          <button class="btn btn-danger-sm btn-del-act" title="Eliminar paso">✕</button>
+        `;
+
+        const inputRol = row.querySelector(".act-rol");
+        const inputAccion = row.querySelector(".act-accion");
+        const inputCondicion = row.querySelector(".act-condicion");
+        const btnDel = row.querySelector(".btn-del-act");
+
+        inputRol.addEventListener("input", (e) => {
+          act.rol = e.target.value;
+          saveState();
+        });
+        inputAccion.addEventListener("input", (e) => {
+          act.accion = e.target.value;
+          saveState();
+        });
+        inputCondicion.addEventListener("input", (e) => {
+          act.condicion = e.target.value;
+          saveState();
+        });
+        btnDel.addEventListener("click", () => {
+          appState.formData.activities.splice(idx, 1);
+          renderActivities();
+          saveState();
+        });
+
+        container.appendChild(row);
+      });
+    }
+
+    // Poblar la UI con datos cargados
+    function populateUIFromState() {
+      // Checkboxes
+      for (let i = 1; i <= 10; i++) {
+        const chk = document.getElementById(`step${i}-check`);
+        const card = document.getElementById(`step${i}-card`);
+        const isChecked = !!appState.steps[i];
+        if (chk) chk.checked = isChecked;
+        if (card) {
+          if (isChecked) card.classList.add("completed");
+          else card.classList.remove("completed");
+        }
+      }
+
+      // Inputs
+      inputMap.forEach(item => {
+        const el = document.getElementById(item.id);
+        if (el && appState.formData[item.prop] !== undefined) {
+          el.value = appState.formData[item.prop];
+        }
+      });
+
+      // Selfie
+      if (appState.formData.selfieDataUrl) {
+        const previewImg = document.getElementById("selfiePreviewImg");
+        const previewContainer = document.getElementById("selfiePreviewContainer");
+        const filenameLabel = document.getElementById("selfieFilename");
+        if (previewImg && previewContainer) {
+          previewImg.src = appState.formData.selfieDataUrl;
+          previewContainer.classList.remove("hidden");
+          filenameLabel.textContent = `✓ Foto cargada: ${appState.formData.selfieFilename || 'Selfie.jpg'}`;
+        }
+      }
+
+      // Actividades
+      renderActivities();
+    }
+
+    // Calcular y actualizar progreso
+    function updateProgress() {
+      let completedCount = 0;
+      for (let i = 1; i <= 10; i++) {
+        if (appState.steps[i]) completedCount++;
+      }
+
+      const percent = Math.round((completedCount / 10) * 100);
+
+      const bar = document.getElementById("overallProgressBar");
+      const countEl = document.getElementById("completedStepsCount");
+      const percentEl = document.getElementById("overallPercentage");
+
+      if (bar) bar.style.width = `${percent}%`;
+      if (countEl) countEl.textContent = completedCount;
+      if (percentEl) percentEl.textContent = `(${percent}%)`;
+
+      // Status de Parte 1 (Pasos 1 al 7)
+      let part1Complete = true;
+      for (let i = 1; i <= 7; i++) {
+        if (!appState.steps[i]) {
+          part1Complete = false;
+          break;
+        }
+      }
+
+      const badgeP1 = document.getElementById("badgeStatusPart1");
+      if (badgeP1) {
+        if (part1Complete) {
+          badgeP1.textContent = "Listo ✓";
+          badgeP1.className = "status-pill complete";
+        } else {
+          badgeP1.textContent = "Pendiente";
+          badgeP1.className = "status-pill pending";
+        }
+      }
+
+      // Status de Parte 2 (Pasos 8 al 10)
+      let part2Complete = true;
+      for (let i = 8; i <= 10; i++) {
+        if (!appState.steps[i]) {
+          part2Complete = false;
+          break;
+        }
+      }
+
+      const badgeP2 = document.getElementById("badgeStatusPart2");
+      if (badgeP2) {
+        if (part2Complete) {
+          badgeP2.textContent = "Listo ✓";
+          badgeP2.className = "status-pill complete";
+        } else {
+          badgeP2.textContent = "Pendiente";
+          badgeP2.className = "status-pill pending";
+        }
+      }
+    }
+
+    // Resumen listo para PPT
+    function generateSummaryText() {
+      const f = appState.formData;
+      
+      let activitiesText = "";
+      if (f.activities && f.activities.length > 0) {
+        activitiesText = f.activities.map((a, i) => 
+          `   ${i + 1}. [${a.rol || 'Rol'}] -> ${a.accion || 'Acción'} ${a.condicion ? `(Decisión: ${a.condicion})` : ''}`
+        ).join("\n");
+      } else {
+        activitiesText = "   (Sin actividades registradas aún)";
+      }
+
+      const summary = `===============================================================
+MAPE 2026-2 - PONTIFICIA UNIVERSIDAD CATÓLICA DEL PERÚ
+RELEVAMIENTO Y DOCUMENTACIÓN DE PROCESOS EMPRESARIALES (LAB 01)
+Docente: Marco Caldas
+===============================================================
+
+[PARTE 1: FICHA TÉCNICA DEL PROCESO RELEVADO]
+---------------------------------------------------------------
+1. DATOS DEL INVOLUCRADO:
+   • Nombre: ${f.entrevistadoNombre || '[Por registrar]'}
+   • Cargo Oficial: ${f.entrevistadoCargo || '[Por registrar]'}
+   • Área / Unidad en Campus: ${f.entrevistadoArea || '[Por registrar]'}
+
+2. IDENTIFICACIÓN DEL PROCESO:
+   • Nombre del Proceso: ${f.procesoNombre || '[Por registrar]'}
+   • Objetivo: ${f.procesoObjetivo || '[Por registrar]'}
+   • Alcance (Inicio): ${f.procesoInicio || '[Por registrar]'}
+   • Alcance (Fin): ${f.procesoFin || '[Por registrar]'}
+
+3. PARTICIPANTES Y ROLES (LANES EN CAMUNDA):
+${f.participantes ? f.participantes.split('\n').map(p => `   • ${p}`).join('\n') : '   • [Por registrar]'}
+
+4. ENTRADAS Y SALIDAS:
+   • Entradas (Inputs / Triggers): 
+     ${f.entradas || '[Por registrar]'}
+   • Salidas (Outputs / Productos generados): 
+     ${f.salidas || '[Por registrar]'}
+
+5. INVENTARIO DE FORMATOS Y DOCUMENTOS:
+${f.formatos ? f.formatos.split('\n').map(item => `   • ${item}`).join('\n') : '   • [Por registrar]'}
+
+6. INVENTARIO DE SISTEMAS DE INFORMACIÓN:
+${f.sistemas ? f.sistemas.split('\n').map(item => `   • ${item}`).join('\n') : '   • [Por registrar]'}
+
+7. REGISTRO FOTOGRÁFICO:
+   • Selfie Obligatorio con el Involucrado: ${f.selfieDataUrl ? 'Cargado exitosamente ✓' : 'Pendiente de captura ⚠️'}
+
+---------------------------------------------------------------
+[SECUENCIA DE ACTIVIDADES RELEVADA (AS-IS)]:
+${activitiesText}
+
+---------------------------------------------------------------
+[PARTE 2: MODELADO, MEJORA Y ENTREGA]:
+8. MODELO BPMN 2.0 EN CAMUNDA:
+   • Estado / Archivo: ${f.camundaStatus || (appState.steps[8] ? 'Completado en Camunda Modeler ✓' : 'Pendiente')}
+
+9. INVENTARIO DE OPORTUNIDADES DE MEJORA:
+${f.mejoras || '   • [Por registrar]'}
+
+10. PRESENTACIÓN EN POWERPOINT:
+   • Estado: ${f.pptStatus || (appState.steps[10] ? 'Diapositivas armadas y revisadas ✓' : 'En proceso')}
+===============================================================`;
+
+      const outputEl = document.getElementById("summaryTextOutput");
+      if (outputEl) outputEl.textContent = summary;
+
+      return summary;
+    }
+
+    // Botones de exportación
+    function bindExportButtons() {
+      const btnExportJson = document.getElementById("btnExportJson");
+      const btnExportSummary = document.getElementById("btnExportSummary");
+      const btnCopySummary = document.getElementById("btnCopySummary");
+
+      if (btnExportJson) {
+        btnExportJson.addEventListener("click", () => {
+          const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
+          const downloadAnchor = document.createElement("a");
+          downloadAnchor.setAttribute("href", dataStr);
+          downloadAnchor.setAttribute("download", `MAPE_Lab01_Relevamiento_${Date.now()}.json`);
+          document.body.appendChild(downloadAnchor);
+          downloadAnchor.click();
+          downloadAnchor.remove();
+        });
+      }
+
+      if (btnExportSummary) {
+        btnExportSummary.addEventListener("click", () => {
+          const tabResumenBtn = document.querySelector('[data-tab="tab-resumen"]');
+          if (tabResumenBtn) tabResumenBtn.click();
+        });
+      }
+
+      if (btnCopySummary) {
+        btnCopySummary.addEventListener("click", () => {
+          const text = generateSummaryText();
+          navigator.clipboard.writeText(text).then(() => {
+            const originalText = btnCopySummary.textContent;
+            btnCopySummary.textContent = "✅ ¡Copiado!";
+            setTimeout(() => {
+              btnCopySummary.textContent = originalText;
+            }, 2000);
+          }).catch(err => {
+            console.error("Error al copiar:", err);
+          });
+        });
+      }
+    }
+
+    // Utilidad anti-XSS
+    function escapeHtml(text) {
+      if (!text) return "";
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+  </script>
+</body>
+</html>
